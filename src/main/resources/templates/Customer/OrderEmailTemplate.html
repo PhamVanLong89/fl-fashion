@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết đơn hàng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<div class="main" style="padding: 0px 120px;">
+  <div style="border-bottom: 1px solid #bfbfbf;">
+    <h1 th:text="'CHI TIẾT ĐƠN HÀNG: ' + ${order.orderId}"></h1>
+  </div>
+  <div style="display: flex;flex-direction: row;border-bottom: 3px solid #b2b7c7;">
+    <div style="display: block; width: 60%;background-color: #F8F8FF;margin: 15px;">
+      <h2 style="text-align: center;">ĐỊA CHỈ NGƯỜI NHẬN</h2>
+      <ul style="padding: 5px 0px;  ">
+        <li style="list-style: none;padding: 10px;"
+            th:text="'Họ tên: ' + ${order.customerForm.customerName}"></li>
+        <li style="list-style: none;padding: 10px;"
+            th:text="'Số điện thoại: ' + ${order.customerForm.numberPhone}">
+        </li>
+        <li style="list-style: none;padding: 10px;"
+            th:text="'Địa chỉ: ' + ${order.customerForm.address}">
+        </li>
+      </ul>
+    </div>
+    <div style="display: block; width: 40%;background-color: #F8F8FF;margin: 15px;">
+      <h2 style="text-align: center;">HÌNH THỨC THANH TOÁN</h2>
+      <div style="padding: 10px 10px; margin: 0px" th:switch="${order.paymentsMethod}">
+        <p style="padding: 0px; margin: 0px" th:case="'COD'" class="ml-3 w-100">Thanh toán tiền mặt khi nhận hàng - COD</p>
+        <p style="padding: 0px; margin: 0px" th:case="'MoMo'" class="ml-3 w-100">Thanh toán bằng ví MoMo</p>
+        <p style="padding: 0px; margin: 0px" th:case="'ZaloPay'" class="ml-3 w-100">Thanh toán bằng ZaloPay</p>
+      </div>
+    </div>
+  </div>
+  <div class="product_details">
+    <table style=" width: 100%;padding: 20px 0px;border-collapse: collapse;">
+      <tr style="padding: 15px 0;">
+        <th style="height:70px;border-bottom: 1px solid #ddd;">Hình ảnh</th>
+        <th style="height:70px;border-bottom: 1px solid #ddd;">SKU</th>
+        <th style="height:70px;border-bottom: 1px solid #ddd;">Tên sản phẩm</th>
+        <th style="height:70px;border-bottom: 1px solid #ddd;">Màu sắc</th>
+        <th style="height:70px;border-bottom: 1px solid #ddd;">Kích cỡ</th>
+        <th style="height:70px;border-bottom: 1px solid #ddd;">Giá bán</th>
+        <th style="height:70px;border-bottom: 1px solid #ddd;">Só lượng</th>
+        <th style="height:70px;border-bottom: 1px solid #ddd;">Giảm giá</th>
+        <th style="height:70px;border-bottom: 1px solid #ddd;">Thành tiền</th>
+      </tr>
+      <tr th:each="orderDetail: ${order.orderDetailForms}">
+        <td style="text-align: center;height:70px;border-bottom: 1px solid #ddd;"><img
+            th:src="'cid:' + ${orderDetail.orderDetailId}" alt=""
+            style=" max-width: 90px;height: 70px;"></td>
+        <td style="text-align: center;height:70px;border-bottom: 1px solid #ddd;"
+            th:text="${orderDetail.variantForm.sKU}"></td>
+        <td style="text-align: center;height:70px;border-bottom: 1px solid #ddd;">
+          <p>
+            <a th:href="@{http://localhost:8080/product/{productId}/{productName}(productName=${orderDetail.variantForm.productForm.productName}, productId=${orderDetail.variantForm.productForm.productId})}"
+               th:text="${orderDetail.variantForm.productForm.productName}"></a>
+          </p>
+        </td>
+        <td style="text-align: center;height:70px;border-bottom: 1px solid #ddd;">
+          <input type="color" th:value="${orderDetail.variantForm.color}" disabled>
+        </td>
+        <td style="text-align: center;height:70px;border-bottom: 1px solid #ddd;"
+            th:text="${orderDetail.variantForm.size}"></td>
+        <td style="text-align: center;height:70px;border-bottom: 1px solid #ddd;"
+            th:text="${#numbers.formatDecimal(orderDetail.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+        <td style="text-align: center;height:70px;border-bottom: 1px solid #ddd;"
+            th:text="${orderDetail.quantity}"></td>
+        <td style="text-align: center;height:70px;border-bottom: 1px solid #ddd;"
+            th:text="${orderDetail.sale} + '%'"></td>
+        <td style="text-align: center;height:70px;border-bottom: 1px solid #ddd;"
+            th:text="${#numbers.formatDecimal(orderDetail.amount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+      </tr>
+    </table>
+  </div>
+  <div
+      style=" margin-top: 35px; float: right;display: flex; width: 50%;flex-direction: row;justify-content: space-between;background-color: #F8F8FF; padding: 3px 25px;box-sizing: border-box;">
+    <div style="width:50%; display:inline-block;">
+      <p>Tổng tiền</p>
+    </div>
+    <div style="width:50%; display:inline-block;">
+      <p style="float: right" th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+    </div>
+  </div>
+</div>
+
+<script src="" async defer></script>
+</body>
+</html>

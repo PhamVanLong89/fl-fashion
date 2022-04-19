@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${product.productName}"></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css"
+        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Customer/CSS/style.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+        crossorigin="anonymous"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Customer/JS/script.js}"></script>
+  <script type="text/javascript"
+          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body>
+<div th:replace="Customer/Header :: header"></div>
+<div class="container-fluid">
+  <div class="row mt-5">
+
+    <!-- Hiển thị ảnh sản phẩm -->
+    <div class="col-md-6 col-12 px-4 pl-md-5">
+      <div class="slider-for row">
+        <div th:each="variant: ${product.variants}" th:if="${variant.image1 != null}">
+          <img class="rounded mx-auto d-block" th:src="@{'/img/' + ${variant.image1}}" alt=""
+               style='width: 100%; height: auto; max-width: 650px;'></div>
+        <div th:each="variant: ${product.variants}" th:if="${variant.image2 != null}">
+          <img class="rounded mx-auto d-block" th:src="@{'/img/' + ${variant.image2}}" alt=""
+               style='width: 100%; height: auto; max-width: 650px;'></div>
+      </div>
+      <div class="slider-nav mt-4 mx-0 row">
+        <div th:each="variant: ${product.variants}" th:if="${variant.image1 != null}">
+          <img class="border border-secondary" th:src="@{'/img/' + ${variant.image1}}" alt=''
+               style='width: 97%; height: auto;'></div>
+        <div th:each="variant: ${product.variants}" th:if="${variant.image2 != null}">
+          <img class="border border-secondary" th:src="@{'/img/' + ${variant.image2}}" alt=''
+               style='width: 97%; height: auto;'></div>
+      </div>
+    </div>
+
+    <!-- Hiển thị thông tin chi tiết sản phẩm -->
+    <div class="col-md-6 col-12 pl-md-5">
+      <form action="" method="POST"
+            class="" enctype="multipart/form-data">
+        <h4 class="text-uppercase font-weight-bold name-product mt-4"
+            th:text="${product.productName}"></h4>
+        <div class="form-group m-0">
+          <label class="font-weight-bold" id="labelProductId" th:text="'Mã sản phẩm: ' + ${product.productId}"></label>
+          <input type="hidden" id="productId" name="productId" th:value="${product.productId}">
+        </div>
+        <p th:class="${product.productSale > 0} ? 'link-active font-weight-bold sale-price' : 'font-weight-bold link-active'"
+           th:text="${#numbers.formatDecimal(product.productPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+        <p class="font-weight-bold link-active" th:if="${product.productSale > 0}"
+           th:text="${#numbers.formatDecimal(product.productPrice - (product.productPrice * product.productSale / 100), 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+        <p class="font-weight-bold link-active" th:if="${product.productSale > 0}"
+           th:text="'Giảm: ' + ${product.productSale} +  '%'"></p>
+
+        <div class="form-group">
+          <label class="font-weight-bold m-0" for="color">Màu sắc: <span
+              class="text-danger">*</span>
+            <p id="errorColor" class="error"></p>
+          </label>
+          <div class="radio-toolbar row mx-0" id="color">
+            <div th:each="color, iter: ${colors}">
+              <input type="radio" th:id="'radioColor-' + ${color}" class="mx-5" name="radioColor"
+                     th:value="${color}" th:checked="${iter.index == 0} ? 'checked'"
+                     onchange="getSizesOfProductByColor($(this).val(), $('#productId').val())">
+              <label th:for="'radioColor-' + ${color}" class="mr-1 mt-0 mb-1 radioColor"
+                     th:style="'background-color:' + ${color} + '!important'"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="font-weight-bold m-0" for="size">Kích cỡ: <span
+              class="text-danger">*</span>
+            <p id="errorSize" class="error"></p>
+          </label>
+          <div class="radio-toolbar row mx-0" id="size">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="d-block font-weight-bold">Số lượng: <span
+              class="text-danger">*</span>
+            <p id="errorQuantity" class="error"></p>
+          </label>
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-secondary quantity-minus"
+                    onclick="quantityMinus($('#quantity'))"><i class="fas fa-minus"></i></button>
+            <input class="text-center quantity" id="quantity" type="number" name="quantityDetail"
+                   value="1" min="1" onkeypress="isInputNumber(event)" required/>
+            <button type="button" class="btn btn-secondary quantity-plus"
+                    onclick="quantityPlus($('#quantity'))"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <button type="button" id="btn-addToCart"
+                class="btn btn-danger text-uppercase font-weight-bold mt-3 px-5"
+                onclick="addProductToCart()">Thêm vào giỏ hàng
+        </button>
+        <div class="form-group mt-4">
+          <label class="font-weight-bold">Mô tả</label>
+          <pre th:text="${product.description}"></pre>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!--      Modal thông báo-->
+<div class="modal" tabindex="-1" role="dialog" id="modalCart">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sản phẩm</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="modal-content" class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row mt-3">
+    <hr class="clearfix w-100"/>
+    <h4 class="text-uppercase font-weight-bold name-product ml-3">Sản phẩm tương tự</h4>
+  </div>
+  <div class="autoplay">
+    <!--    Hiển thị sản phẩm tương tự-->
+    <div class="p-1 p-md-3" th:each="similarProduct: ${similarProducts}">
+      <div class="card">
+        <div th:if="${similarProduct.productSale > '0'}" class="ribbon-wrapper">
+          <div class='ribbon' th:text="${'Giảm ' + similarProduct.productSale + '%'}"></div>
+        </div>
+        <a th:href="@{/product/{productId}/{productName}(productName=${similarProduct.productName}, productId=${similarProduct.productId})}">
+          <img class="card-img-top p-md-3" th:src="@{'/img/' + ${similarProduct.image}}"
+               alt="product 1"/></a>
+        <div class="card-body">
+          <p class="card-title text-center text-truncate">
+            <a th:href="@{/product/{productId}/{productName}(productName=${similarProduct.productName}, productId=${similarProduct.productId})}"
+               class="text-decoration-none" th:text="${similarProduct.productName}"></a></p>
+          <h5 class="card-text font-weight-bold text-center"
+              th:text="${#numbers.formatDecimal(similarProduct.productPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:replace="Customer/Footer :: footer"></div>
+</body>
+<script type="text/javascript">
+  getSizesOfProductByColor($('input[name="radioColor"]:checked').val(), $("#productId").val());
+
+</script>
+</html>

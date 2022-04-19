@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="'Danh mục sản phẩm - ' + ${category}"></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css"
+        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Customer/CSS/style.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+        crossorigin="anonymous"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Customer/JS/script.js}"></script>
+  <script type="text/javascript"
+          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body>
+<div th:replace="Customer/Header :: header"></div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 col-12 d-none d-md-block">
+      <!-- Hiển thị danh mục sản phẩm -->
+      <div class="mt-5 ml-0 ml-xl-5">
+        <div th:if="${#strings.contains(category, 'nu')}">
+          <a th:class="${displayType == 'category' && category == 'nu'} ? 'd-block font-weight-bold link-active' : 'd-block font-weight-bold'"
+             th:href="@{/products/category/nu}">Nữ</a>
+          <a th:class="${displayType == 'new'} ? 'd-block mt-3 font-weight-bold link-active' : 'd-block mt-3 font-weight-bold'"
+             th:href="@{/products/new/nu}">Sản phẩm mới</a>
+          <a th:class="${displayType == 'sale'} ? 'd-block mt-3 font-weight-bold link-active' : 'd-block mt-3 font-weight-bold'"
+             th:href="@{/products/sale/nu}">Sản phẩm giảm giá</a>
+          <p class='font-weight-bold mb-1 mt-3'>Danh mục sản phẩm</p>
+          <ul class='list-unstyled'>
+            <li><a th:href="@{/products/category/ao nu}"
+                   th:class="${displayType == 'category' && category == 'ao nu'} ? 'link-active'">Áo</a>
+            </li>
+            <li><a th:href="@{/products/category/quan nu}"
+                   th:class="${displayType == 'category' && category == 'quan nu'} ? 'link-active'">Quần</a>
+            </li>
+            <li><a th:href="@{/products/category/vay nu}"
+                   th:class="${displayType == 'category' && category == 'vay nu'} ? 'link-active'">Váy</a>
+            </li>
+            <li><a th:href="@{/products/category/phu kien nu}"
+                   th:class="${displayType == 'category' && category == 'phu kien nu'} ? 'link-active'">Phụ
+              kiện</a></li>
+          </ul>
+        </div>
+        <div th:if="${#strings.contains(category, 'nam')}">
+          <a th:class="${displayType == 'category' && category == 'nam'} ? 'd-block font-weight-bold link-active' : 'd-block font-weight-bold'"
+             th:href="@{/products/category/nam}">Nam</a>
+          <a th:class="${displayType == 'new'} ? 'd-block mt-3 font-weight-bold link-active' : 'd-block mt-3 font-weight-bold'"
+             th:href="@{/products/new/nam}">Sản phẩm mới</a>
+          <a th:class="${displayType == 'sale'} ? 'd-block mt-3 font-weight-bold link-active' : 'd-block mt-3 font-weight-bold'"
+             th:href="@{/products/sale/nam}">Sản phẩm giảm giá</a>
+          <p class='font-weight-bold mb-1 mt-3'>Danh mục sản phẩm</p>
+          <ul class='list-unstyled'>
+            <li><a th:href="@{/products/category/ao nam}"
+                   th:class="${displayType == 'category' && category == 'ao nam'} ? 'link-active'">Áo</a>
+            </li>
+            <li><a th:href="@{/products/category/quan nam}"
+                   th:class="${displayType == 'category' && category == 'quan nam'} ? 'link-active'">Quần</a>
+            </li>
+            <li><a th:href="@{/products/category/phu kien nam}"
+                   th:class="${displayType == 'category' && category == 'phu kien nam'} ? 'link-active'">Phụ
+              kiện</a></li>
+          </ul>
+        </div>
+        <div th:if="${#strings.contains(category, 'be gai')}">
+          <a th:class="${displayType == 'category' && category == 'be gai'} ? 'd-block font-weight-bold link-active' : 'd-block font-weight-bold'"
+             th:href="@{/products/category/be gai}">Bé gái</a>
+          <a th:class="${displayType == 'new'} ? 'd-block mt-3 font-weight-bold link-active' : 'd-block mt-3 font-weight-bold'"
+             th:href="@{/products/new/be gai}">Sản phẩm mới</a>
+          <a th:class="${displayType == 'sale'} ? 'd-block mt-3 font-weight-bold link-active' : 'd-block mt-3 font-weight-bold'"
+             th:href="@{/products/sale/be gai}">Sản phẩm giảm giá</a>
+          <p class='font-weight-bold mb-1 mt-3'>Danh mục sản phẩm</p>
+          <ul class='list-unstyled'>
+            <li><a th:href="@{/products/category/ao be gai}"
+                   th:class="${displayType == 'category' && category == 'ao be gai'} ? 'link-active'">Áo</a>
+            </li>
+            <li><a th:href="@{/products/category/quan be gai}"
+                   th:class="${displayType == 'category' && category == 'quan be gai'} ? 'link-active'">Quần</a>
+            </li>
+            <li><a th:href="@{/products/category/vay be gai}"
+                   th:class="${category == 'vay be gai'} ? 'link-active'">Váy</a></li>
+            <li><a th:href="@{/products/category/phu kien be gai}"
+                   th:class="${displayType == 'category' && category == 'phu kien be gai'} ? 'link-active'">Phụ
+              kiện</a></li>
+          </ul>
+        </div>
+        <div th:if="${#strings.contains(category, 'be trai')}">
+          <a th:class="${displayType == 'category' && category == 'be trai'} ? 'd-block font-weight-bold link-active' : 'd-block font-weight-bold'"
+             th:href="@{/products/category/be trai}">Bé trai</a>
+          <a th:class="${displayType == 'new'} ? 'd-block mt-3 font-weight-bold link-active' : 'd-block mt-3 font-weight-bold'"
+             th:href="@{/products/new/be trai}">Sản phẩm mới</a>
+          <a th:class="${displayType == 'sale'} ? 'd-block mt-3 font-weight-bold link-active' : 'd-block mt-3 font-weight-bold'"
+             th:href="@{/products/sale/be trai}">Sản phẩm giảm giá</a>
+          <p class='font-weight-bold mb-1 mt-3'>Danh mục sản phẩm</p>
+          <ul class='list-unstyled'>
+            <li><a th:href="@{/products/category/ao be trai}"
+                   th:class="${displayType == 'category' && category == 'ao be trai'} ? 'link-active'">Áo</a>
+            </li>
+            <li><a th:href="@{/products/category/quan be trai}"
+                   th:class="${displayType == 'category' && category == 'quan be trai'} ? 'link-active'">Quần</a>
+            </li>
+            <li><a th:href="@{/products/category/phu kien be trai}"
+                   th:class="${displayType == 'category' && category == 'phu kien be trai'} ? 'link-active'">Phụ
+              kiện</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!--       Hiển thị bộ lọc -->
+      <div>
+        <hr/>
+        <p class="w-100 m bg-light text-uppercase py-2 pl-xl-5">Đơn giá</p>
+        <div class="form-check ml-xl-5">
+          <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice1"
+                 th:checked="${(param.maxPrice != null && param.maxPrice[0] == '200000') && (param.minPrice == null || param.minPrice[0] == '0')}"
+                 th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '200000') && (param.minPrice == null || param.minPrice[0] == '0')} ? 'productFilter(null, null)' : 'productFilter(200000, 0)'">
+          <label class="form-check-label" for="filterPrice1">0đ - 200.000đ</a></label>
+        </div>
+        <div class="form-check ml-xl-5">
+          <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice2"
+                 th:checked="${(param.maxPrice != null && param.maxPrice[0] == '400000') && (param.minPrice != null && param.minPrice[0] == '200000')}"
+                 th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '400000') && (param.minPrice != null && param.minPrice[0] == '200000')} ? 'productFilter(null, null)' : 'productFilter(400000, 200000)'">
+          <label class="form-check-label" for="filterPrice2">200.000đ - 400.000đ</label>
+        </div>
+        <div class="form-check ml-xl-5">
+          <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice3"
+                 th:checked="${(param.maxPrice != null && param.maxPrice[0] == '600000') && (param.minPrice != null && param.minPrice[0] == '400000')}"
+                 th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '600000') && (param.minPrice != null && param.minPrice[0] == '400000')} ? 'productFilter(null, null)' : 'productFilter(600000, 400000)'">
+          <label class="form-check-label" for="filterPrice3">400.000đ - 600.000đ</label>
+        </div>
+        <div class="form-check ml-xl-5">
+          <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice4"
+                 th:checked="${(param.maxPrice != null && param.maxPrice[0] == '800000') && (param.minPrice != null && param.minPrice[0] == '600000')}"
+                 th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '800000') && (param.minPrice != null && param.minPrice[0] == '600000')} ? 'productFilter(null, null)' : 'productFilter(800000, 600000)'">
+          <label class="form-check-label" for="filterPrice4">600.000đ - 800.000đ</label>
+        </div>
+        <div class="form-check ml-xl-5">
+          <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice5"
+                 th:checked="${(param.maxPrice != null && param.maxPrice[0] == '1200000') && (param.minPrice != null && param.minPrice[0] == '800000')}"
+                 th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '1200000') && (param.minPrice != null && param.minPrice[0] == '800000')} ? 'productFilter(null, null)' : 'productFilter(1200000, 800000)'">
+          <label class="form-check-label" for="filterPrice5">800.000đ - 1.200.000đ</label>
+        </div>
+        <div class="form-check ml-xl-5">
+          <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice6"
+                 th:checked="${(param.maxPrice != null && param.maxPrice[0] == '1800000') && (param.minPrice != null && param.minPrice[0] == '1200000')}"
+                 th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '1800000') && (param.minPrice != null && param.minPrice[0] == '1200000')} ? 'productFilter(null, null)' : 'productFilter(1800000, 1200000)'">
+          <label class="form-check-label" for="filterPrice6">1.200.000đ - 1.800.000đ</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hiển thị sản phẩm -->
+    <div class="col-md-10 col-12">
+      <div class="row mt-5">
+        <div class="product col-md-4 col-6 p-1 p-md-3" th:each="product: ${products}">
+          <div class="card">
+            <div th:if="${product.productSale > '0'}" class="ribbon-wrapper">
+              <div class='ribbon' th:text="${'Giảm ' + product.productSale + '%'}"></div>
+            </div>
+            <a th:href="@{/product/{productId}/{productName}(productName=${product.productName}, productId=${product.productId})}">
+              <img class="card-img-top p-md-3" th:src="@{'/img/' + ${product.image}}"
+                   alt="product 1"/></a>
+            <div class="card-body">
+              <p class="card-title text-center text-truncate">
+                <a th:href="@{/product/{productId}/{productName}(productName=${product.productName}, productId=${product.productId})}"
+                   class="text-decoration-none" th:text="${product.productName}"></a></p>
+              <h5 class="card-text font-weight-bold text-center"
+                  th:text="${#numbers.formatDecimal(product.productPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+            </div>
+          </div>
+        </div>
+        <div th:if="${#lists.isEmpty(products)}" class="w-100 font-weight-bold text-center">
+          Rất tiếc, không tìm thấy sản phẩm phù hợp với lựa chọn của bạn.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Phân trang-->
+<nav aria-label="Page navigation example" class="mt-5" th:with="size=3"
+     th:if="${currentPage <= totalPage && totalPage > 1}">
+
+  <ul class="pagination justify-content-center">
+    <li class="page-item" th:if="${currentPage > 1}">
+      <a class="page-link"
+         th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+         th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page',currentPage - 1).toUriString())}"
+         aria-label="Previous">
+        <span aria-hidden="true" class="text-dark">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    <li class="page-item" th:if="${totalPage > size && currentPage > ((size % 2) + 1)}">
+      <p class="page-link" aria-label="Previous">
+        <span aria-hidden="true" class="text-dark">...</span>
+      </p>
+    </li>
+
+    <li class="page-item" th:if="${totalPage > size && currentPage < ((size % 2) + 1)}"
+        th:each="i: ${#numbers.sequence(1, size)}">
+      <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+         th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+         th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page', i).toUriString())}"
+         th:text="${i}"></a>
+    </li>
+    <li class="page-item"
+        th:if="${totalPage > size && currentPage >= ((size % 2) + 1) && currentPage <= (totalPage - (size % 2))}"
+        th:each="i: ${#numbers.sequence(currentPage - (size % 2), currentPage + (size % 2))}">
+      <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+         th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+         th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page', i).toUriString())}"
+         th:text="${i}"></a>
+    </li>
+    <li class="page-item"
+        th:if="${totalPage > size && currentPage > (totalPage - (size % 2))}"
+        th:each="i: ${#numbers.sequence((totalPage - size + 1), totalPage)}">
+      <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+         th:href="@{/products/{displayType}/{category}?page={page}(displayType=${displayType}, category=${category}, page=${i})}"
+         th:text="${i}"></a>
+    </li>
+    <li class="page-item" th:if="${totalPage <= size}"
+        th:each="i: ${#numbers.sequence(1, totalPage)}">
+      <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+         th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+         th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page', i).toUriString())}"
+         th:text="${i}"></a>
+    </li>
+
+    <li class="page-item"
+        th:if="${totalPage > size && currentPage < (totalPage - (size % 2))}">
+      <p class="page-link" aria-label="Previous">
+        <span aria-hidden="true" class="text-dark">...</span>
+      </p>
+    </li>
+    <li class="page-item" th:if="${currentPage < totalPage}">
+      <a class="page-link"
+         th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+         th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page', currentPage + 1).toUriString())}"
+         aria-label="Next">
+        <span aria-hidden="true" class="text-dark">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+<div th:replace="Customer/Footer :: footer"></div>
+</body>
+</html>

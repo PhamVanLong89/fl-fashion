@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8">
+  <title>Giỏ hàng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css"
+        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Customer/CSS/style.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+        crossorigin="anonymous"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Customer/JS/script.js}"></script>
+  <script type="text/javascript"
+          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body>
+<div th:replace="Customer/Header :: header"></div>
+<div class="container-fluid">
+  <h3 class="text-uppercase font-weight-bold mt-5 ml-md-4 title-cart"
+      style="font-size: 30px !important;">Giỏ Hàng</h3>
+  <hr class="clearfix w-100 "/>
+
+  <div th:if="${cart != null && not #lists.isEmpty(cart.cartItems)}">
+    <!-- Modal message order-->
+    <div class="modal fade" id="modal-message" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Đặt hàng</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="modal-message-body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form action="" method="POST">
+      <div class="row">
+        <div class="col-md-8 col-12">
+          <div class="row ml-md-4" th:each="item: ${cart.cartItems}">
+            <div class='col-md-3 col-4'>
+              <a th:href="@{/product/{productId}/{productName}(productName=${item.variant.product.productName}, productId=${item.variant.product.productId})}">
+                <img th:if="${item.variant.image1 != null}"
+                     th:src="@{'/img/' + ${item.variant.image1}}" alt="" class="img-thumbnail">
+                <img th:unless="${item.variant.image1 != null}"
+                     th:src="@{'/img/' + ${item.variant.image2}}" alt="" class="img-thumbnail">
+              </a>
+            </div>
+            <div class='col-md-9 col-8 pl-md-5'>
+              <p class='font-weight-bold text-uppercase'>
+                <a th:href="@{/product/{productId}/{productName}(productName=${item.variant.product.productName}, productId=${item.variant.product.productId})}"
+                   th:text="${item.variant.product.productName}"></a>
+              </p>
+              <p class="my-1" th:text="'SKU: ' + ${item.variant.sKU}"></p>
+              <p class="my-1">Màu sắc:
+                <input type="color" th:value="${item.variant.color}" disabled>
+              </p>
+              <p class="my-1" th:text="'Kích cỡ: ' + ${item.variant.size}"></p>
+              <p class="my-1"
+                 th:text="'Đơn giá: ' + ${#numbers.formatDecimal(item.variant.product.productPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+              <p class="my-1"
+                 th:text="'Giảm giá: ' + ${#numbers.formatDecimal((item.variant.product.productPrice * item.variant.product.productSale / 100), 0, 'COMMA', 0, 'POINT')} + ' đ'">
+              </p>
+              <p class='d-inline'>Số lượng: </p>
+              <div class='btn-group btn-group-sm' role='group' aria-label='Basic example'>
+                <button type='button' class='btn btn-secondary quantity-minus'
+                        th:onclick="quantityMinus($(this).next()); changeQuantity($(this).next(), [[${item.id}]]);">
+                  <i class='fas fa-minus'></i></button>
+                <input class="text-center quantity" type="number" style="width:50px;"
+                       th:value="${item.quantity}" min="1" onkeypress="isInputNumber(event)"
+                       th:onchange="changeQuantity($(this), [[${item.id}]])">
+                <button type='button' class='btn btn-secondary quantity-plus'
+                        th:onclick="quantityPlus($(this).prev()); changeQuantity($(this).prev(), [[${item.id}]]);">
+                  <i class='fas fa-plus'></i></button>
+              </div>
+              <p th:id="'error-item-' + ${item.id}" class="error error-item"></p>
+              <p class="my-2"
+                 th:text="'Thành tiền: ' + ${#numbers.formatDecimal((item.variant.product.productPrice - (item.variant.product.productPrice * item.variant.product.productSale / 100)) * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+              </p>
+              <button class="float-right mr-0 mr-md-5 btn btn-outline-danger"
+                      th:onclick="deleteItemInCart([[${item.id}]])">
+                <i class="fas fa-trash-alt"></i></button>
+            </div>
+            <hr class="clearfix w-100"/>
+          </div>
+        </div>
+        <div class="col-md-4 col-12">
+          <div class="container bg-light">
+            <div class='row pt-5'>
+              <div class='col-6'>
+                <p class='text-left'>Tổng:</p>
+              </div>
+              <div class='col-5'>
+                <p class="text-right" id="totalProduct" th:text="${totalProduct} + ' sản phẩm'"></p>
+              </div>
+            </div>
+            <div class='row'>
+              <div class='col-6'>
+                <p class='text-left'>Tổng giá bán:</p>
+              </div>
+              <div class='col-5'>
+                <p class="text-right" id="totalPrice"
+                   th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+              </div>
+            </div>
+            <div class='row'>
+              <div class='col-6'>
+                <p class='text-left'>Giảm giá:</p>
+              </div>
+              <div class='col-5'>
+                <p class="text-right" id="totalDiscount"
+                   th:text="${#numbers.formatDecimal(totalDiscount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+              </div>
+            </div>
+            <div class='row'>
+              <div class='col-6'>
+                <p class='text-left font-weight-bold'>Tạm tính:</p>
+              </div>
+              <div class='col-5'>
+                <p class="text-right font-weight-bold text-danger" id="amount"
+                   th:text="${#numbers.formatDecimal(totalPrice - totalDiscount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+              </div>
+            </div>
+            <hr class="clearfix w-100 "/>
+            <div sec:authorize="hasRole('ROLE_USER')">
+              <div class="form-group">
+                <label for="addressOrder" class="font-weight-bold">Địa chỉ giao hàng<span
+                    class="text-danger">*</span>
+                  <p id="errorAddress" class="error"></p>
+                </label>
+                <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                        data-target="#modalAddress">Thay đổi
+                </button>
+                <input type="text" class="form-control float-right" id="addressOrder"
+                       name="addressOrder" placeholder="Địa chỉ" readonly
+                       th:value="${#authentication.getPrincipal().getAddress()}"/>
+                <!-- Modal address -->
+                <div class="modal fade" id="modalAddress" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Thay đổi địa chỉ</h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label for="addressOrderModal" class="font-weight-bold">Địa chỉ giao hàng
+                            <p id="errorAddressModal" class="error"></p>
+                          </label>
+                          <input type="text" class="form-control" id="addressOrderModal"
+                                 name="addressOrderModal" placeholder=""
+                                 th:value="${#authentication.getPrincipal().getAddress()}"/>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy
+                        </button>
+                        <button type="button" class="btn btn-warning"
+                                onclick="changeAddressOrder()">Lưu
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mt-5">
+                <label for="numberPhoneOrder" class="font-weight-bold">Số điện thoại<span
+                    class="text-danger">*</span>
+                  <p id="errorNumberPhone" class="error"></p>
+                </label>
+                <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                        data-target="#modalNumberPhone">Thay đổi
+                </button>
+                <input type="tel" class="form-control" id="numberPhoneOrder"
+                       name="numberPhoneOrder" readonly placeholder=""
+                       th:value="${#authentication.getPrincipal().getPhoneNumber()}"/>
+                <!-- Modal number phone -->
+                <div class="modal fade" id="modalNumberPhone" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thay đổi số điện thoại</h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label for="numberPhoneOrderModal" class="font-weight-bold">Số điện thoại
+                            <p id="errorNumberPhoneModal" class="error"></p>
+                          </label>
+                          <input type="tel" class="form-control" id="numberPhoneOrderModal"
+                                 name="numberPhoneOrderModal" placeholder=""
+                                 th:value="${#authentication.getPrincipal().getPhoneNumber()}"/>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy
+                        </button>
+                        <button type="button" class="btn btn-warning"
+                                onclick="changeNumberPhone()">Lưu
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="font-weight-bold">Phương thức thanh toán<span
+                    class="text-danger">*</span>
+                  <p id="errorPayment" class="error"></p>
+                </label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="paymentMethod" value="COD"
+                         id="defaultCheck1">
+                  <label class="form-check-label" for="defaultCheck1">Thanh toán tiền mặt khi nhận
+                    hàng - COD</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="paymentMethod" value="MoMo"
+                         id="defaultCheck2">
+                  <label class="form-check-label" for="defaultCheck2">Thanh toán bằng ví
+                    MoMo</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="paymentMethod"
+                         value="ZaloPay" id="defaultCheck3">
+                  <label class="form-check-label" for="defaultCheck3">Thanh toán bằng
+                    ZaloPay</label>
+                </div>
+              </div>
+              <hr class="clearfix w-100 "/>
+            </div>
+            <div class='row'>
+              <button class="btn btn-secondary text-uppercase font-weight-bold mb-3 w-100 mx-4"
+                      type="button">Tiếp tục mua hàng
+              </button>
+              <button class="btn btn-danger text-uppercase font-weight-bold mb-5 w-100 mx-4"
+                      type="button" onclick="order()">Đặt hàng
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row" th:if="${cart == null || #lists.isEmpty(cart.cartItems)}">
+    <img src="https://salt.tikicdn.com/desktop/img/mascot@2x.png" alt=""
+         class="rounded mx-auto d-block mb-2">
+    <div class="w-100 font-weight-bold text-center">Không có sản phẩm nào trong giỏ hàng của
+      bạn.
+    </div>
+    <a th:href="@{/}" class="btn btn-warning d-block mx-auto mt-4">Tiếp
+      tục mua hàng</a>
+  </div>
+</div>
+<div th:replace="Customer/Footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách đơn hàng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css"
+        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Customer/CSS/style.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+        crossorigin="anonymous"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Customer/JS/script.js}"></script>
+  <script type="text/javascript"
+          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body>
+<div th:replace="Customer/Header :: header"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3 my-5 ">
+      <a class="row my-2" th:href="@{/user/profile}">Thông tin tài khoản</a>
+      <a class="row my-2 link-active" th:href="@{/user/orders}">Danh sách đơn hàng</a>
+      <a class="row my-2" th:href="@{/user/ChangePassword}">Đổi mật khẩu</a>
+      <a class="row my-2" th:href="@{/user/logout}">Đăng xuất</a>
+    </div>
+    <div class="col-md-9">
+      <h3 class="text-uppercase font-weight-bold mt-5 title-cart">Đơn hàng của bạn</h3>
+      <div th:if="${#lists.isEmpty(orders) && totalPage == 0}"
+           class="w-100 mt-5 font-weight-bold text-center">Bạn chưa mua đơn hàng nào.
+      </div>
+      <div th:unless="${#lists.isEmpty(orders)}" class="row table2">
+        <table class="table table-striped mt-4" id="" name="tableOrders">
+          <thead>
+          <tr>
+            <th scope="col">Mã ĐH</th>
+            <th scope="col">Ngày mua</th>
+            <th scope="col">Tổng SP</th>
+            <th scope="col">Tổng tiền</th>
+            <th scope="col">Trạng thái đơn hàng</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="order: ${orders}">
+            <td th:text="${order.orderId}"></td>
+            <td th:text="${order.orderDate}"></td>
+            <td th:text="${order.totalProduct}"></td>
+            <td th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+            <td th:text="${order.orderStatus}"></td>
+            <td>
+              <a th:href="@{/user/order/{orderId}(orderId=${order.orderId})}"
+                 class="btn btn-warning d-block " role="button">Chi tiết</a>
+            </td>
+            <td>
+              <button th:if="${order.orderStatus == 'Chờ xác nhận'}" type="button"
+                      th:onclick="cancelOrder([[${order.orderId}]])"
+                      class='btn btn-outline-warning'>Hủy đơn hàng
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <!--    PHân trang-->
+      <nav aria-label="Page navigation example" class="mt-5" th:with="size=3"
+           th:if="${currentPage <= totalPage && totalPage > 1}">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" th:if="${currentPage > 1}">
+            <a class="page-link"
+               th:href="@{/user/orders?page={page}(page=${currentPage - 1})}"
+               aria-label="Previous">
+              <span aria-hidden="true" class="text-dark">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          <li class="page-item" th:if="${totalPage > size && currentPage > ((size % 2) + 1)}">
+            <p class="page-link" aria-label="Previous">
+              <span aria-hidden="true" class="text-dark">...</span>
+            </p>
+          </li>
+
+          <li class="page-item" th:if="${totalPage > size && currentPage < ((size % 2) + 1)}"
+              th:each="i: ${#numbers.sequence(1, size)}">
+            <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+               th:href="@{/user/orders?page={page}(page=${i})}" th:text="${i}"></a>
+          </li>
+          <li class="page-item"
+              th:if="${totalPage > size && currentPage >= ((size % 2) + 1) && currentPage <= (totalPage - (size % 2))}"
+              th:each="i: ${#numbers.sequence(currentPage - (size % 2), currentPage + (size % 2))}">
+            <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+               th:href="@{/user/orders?page={page}(page=${i})}" th:text="${i}"></a>
+          </li>
+          <li class="page-item"
+              th:if="${totalPage > size && currentPage > (totalPage - (size % 2))}"
+              th:each="i: ${#numbers.sequence((totalPage - size + 1), totalPage)}">
+            <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+               th:href="@{/user/orders?page={page}(page=${i})}" th:text="${i}"></a>
+          </li>
+          <li class="page-item" th:if="${totalPage <= size}"
+              th:each="i: ${#numbers.sequence(1, totalPage)}">
+            <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+               th:href="@{/user/orders?page={page}(page=${i})}" th:text="${i}"></a>
+          </li>
+
+          <li class="page-item"
+              th:if="${totalPage > size && currentPage < (totalPage - (size % 2))}">
+            <p class="page-link" aria-label="Previous">
+              <span aria-hidden="true" class="text-dark">...</span>
+            </p>
+          </li>
+          <li class="page-item" th:if="${currentPage < totalPage}">
+            <a class="page-link"
+               th:href="@{/user/orders?page={page}(page=${currentPage + 1})}"
+               aria-label="Next">
+              <span aria-hidden="true" class="text-dark">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <!-- Modal message cancel order -->
+  <div id="modal-cancel-order" class="modal fade" tabindex="-1"
+       role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Đơn hàng đã mua</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id="modal-content" class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:replace="Customer/Footer :: footer"></div>
+</body>
+</html>

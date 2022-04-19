@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head sec:authorize="hasRole('ROLE_ADMIN')">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>Không tìm thấy trang yêu cầu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Admin/CSS/style2.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <script src="https://kit.fontawesome.com/b86b756e64.js" crossorigin="anonymous"></script>
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Admin/JS/script.js}"></script>
+</head>
+<head sec:authorize="isAnonymous() || hasRole('ROLE_USER')">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>Không tìm thấy trang yêu cầu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css"
+        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Customer/CSS/style.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+        crossorigin="anonymous"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Customer/JS/script.js}"></script>
+  <script type="text/javascript"
+          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body>
+
+<!--View page 404 of admin-->
+<div class="page-wrapper chiller-theme toggled" sec:authorize="hasRole('ROLE_ADMIN')">
+  <div th:replace="Admin/SidebarAdmin :: sidebar"></div>
+  <main class="page-content">
+    <div class="bg-warning container-fluid">
+      <div class="row mx-0 px-0 w-100">
+        <div class="col-md-6 col-12 d-md-flex align-items-end justify-content-end">
+          <img src="https://salt.tikicdn.com/assets/img/404/super.png" class="img-fluid"
+               alt="Responsive image">
+          <img src="https://salt.tikicdn.com/assets/img/404/404.png" class="img-fluid"
+               alt="Responsive image">
+        </div>
+        <div class="col-md-6 col-12 d-flex align-items-end">
+          <h2 class="text-white">Xin lỗi, trang bạn tìm kiếm không tồn tại!</h2>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!--View page 404 of customer-->
+<div sec:authorize="isAnonymous() || hasRole('ROLE_USER')" th:replace="Customer/Header :: header"></div>
+<div class="bg-warning container-fluid mt-4 py-4" sec:authorize="isAnonymous() || hasRole('ROLE_USER')">
+  <div class="row mx-0 px-0 w-100">
+    <div class="col-md-6 col-12 d-md-flex align-items-end justify-content-end">
+      <img src="https://salt.tikicdn.com/assets/img/404/super.png" class="img-fluid"
+           alt="Responsive image">
+      <img src="https://salt.tikicdn.com/assets/img/404/404.png" class="img-fluid"
+           alt="Responsive image">
+    </div>
+    <div class="col-md-6 col-12 d-flex align-items-end">
+      <h1 class="text-white">Xin lỗi, trang bạn tìm kiếm không tồn tại!</h1>
+    </div>
+  </div>
+</div>
+<div sec:authorize="isAnonymous() || hasRole('ROLE_USER')" th:replace="Customer/Footer :: footer"></div>
+
+</body>
+</html>

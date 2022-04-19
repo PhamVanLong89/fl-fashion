@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Thông tin cá nhân</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Admin/CSS/style2.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <script src="https://kit.fontawesome.com/b86b756e64.js" crossorigin="anonymous"></script>
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Admin/JS/script.js}"></script>
+</head>
+<body>
+<div class="page-wrapper chiller-theme toggled">
+  <div th:replace="Admin/SidebarAdmin :: sidebar"></div>
+  <main class="page-content">
+    <div class="container">
+      <h4 class="text-uppercase text-danger font-weight-bold text-center">Thông tin tài khoản</h4>
+      <hr/>
+      <div th:if="${message != null}">
+        <div class="modal" tabindex="-1" role="dialog" id="modalAddAdmin">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Tài khoản Admin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p th:text="${message}"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <form th:action="@{/manager/admin/profile}" th:object="${admin}" method="post"
+            enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="adminName" class="font-weight-bold">Tên admin <span
+              class="text-danger">*</span>
+            <p class="error" th:if="${#fields.hasErrors('adminName')}" th:errors="*{adminName}"></p>
+          </label>
+          <input type="text" class="form-control" id="adminName" name="name" placeholder="Tên admin"
+                 required th:field="*{adminName}"/>
+        </div>
+        <div class="form-group">
+          <label for="phoneNumberAdmin" class="font-weight-bold">Số điện thoại<span
+              class="text-danger">*</span>
+            <p class="error" th:if="${#fields.hasErrors('numberPhone')}"
+               th:errors="*{numberPhone}"></p>
+          </label>
+          <input type="tel" class="form-control" id="phoneNumberAdmin" name="numberPhone"
+                 placeholder="Số điện thoại" required th:field="*{numberPhone}"/>
+        </div>
+        <div class="form-group">
+          <label for="sexAdmin" class="font-weight-bold">Giới tính<span class="text-danger">*</span>
+            <p class="error" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></p>
+          </label>
+          <select class="custom-select" id="sexAdmin" name="sex" th:field="*{sex}">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="addressAdmin" class="font-weight-bold">Địa chỉ<span
+              class="text-danger">*</span>
+            <p class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+          </label>
+          <input type="text" class="form-control" id="addressAdmin" name="address"
+                 placeholder="Địa chỉ" required th:field="*{address}"/>
+        </div>
+        <div class="form-group">
+          <label for="emailAdmin" class="font-weight-bold">Email <span class="text-danger">*</span>
+          </label>
+          <input type="email" class="form-control" id="emailAdmin" aria-describedby="emailHelp"
+                 name="email" placeholder="Email admin" required readonly th:field="*{email}"/>
+        </div>
+        <div class="form-group">
+          <label for="imageAdmin" class="font-weight-bold">Hình ảnh</label>
+          <input type="file" name="file" id="imageAdmin"
+                 onchange="readURL(this, $('#avatarAdmin'))" />
+          <img id="avatarAdmin" th:if="${admin.image != null}" th:src="@{'/img/' + ${admin.image}}"
+               alt='' class='img-thumbnail avatar form-control'>
+          <img th:unless="${admin.image != null}" th:src="@{/img/no_avatar.png}"
+               alt='' class='img-thumbnail avatar form-control'>
+        </div>
+        <button type="submit" class="btn btn-info mt-4">Sửa thông tin</button>
+        <a th:href="@{/manager}" class="btn btn-dark mt-4" role="button"><i
+            class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a>
+      </form>
+    </div>
+  </main>
+  <!-- page-content" -->
+</div>
+</body>
+</html>

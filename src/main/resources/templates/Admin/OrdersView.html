@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách đơn hàng</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/Admin/CSS/style2.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <script src="https://kit.fontawesome.com/b86b756e64.js" crossorigin="anonymous"></script>
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Admin/JS/script.js}"></script>
+</head>
+<body>
+<div class="page-wrapper chiller-theme toggled">
+  <div th:replace="Admin/SidebarAdmin :: sidebar"></div>
+  <main class="page-content">
+    <div class="container-fluid">
+      <h4 class="text-uppercase text-danger font-weight-bold text-center">Danh sách đơn hàng</h4>
+      <hr/>
+      <div class="table">
+        <table class="table mt-4" name="tableOrders">
+          <thead>
+          <tr>
+            <th scope="col">Mã ĐH</th>
+            <th scope="col">Tên khách hàng</th>
+            <th scope="col">SĐT nhận hàng</th>
+            <th scope="col">Địa chỉ nhận hàng</th>
+            <th scope="col">Ngày mua</th>
+            <th scope="col">Tổng SP</th>
+            <th scope="col">Tổng tiền</th>
+            <th scope="col">Trạng thái đơn hàng</th>
+            <th scope="col">Phương thức thanh toán</th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="order: ${orders}">
+            <td th:text="${order.orderId}"></td>
+            <td th:text="${order.customerForm.customerName}"></td>
+            <td th:text="${order.orderNumberPhone}"></td>
+            <td th:text="${order.orderAddress}"></td>
+            <td th:text="${order.orderDate}"></td>
+            <td th:text="${order.totalProduct}"></td>
+            <td th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+            <td>
+              <div class="form-group">
+                <select class="custom-select "
+                        th:onchange="changeOrderStatus($(this).val(), [[${order.orderId}]])">
+                  <option th:if="${order.orderStatus != 'Đã hủy'}"
+                          th:selected="${order.orderStatus == 'Chờ xác nhận'} ? 'selected'"
+                          value="Chờ xác nhận">Chờ xác nhận
+                  </option>
+                  <option th:if="${order.orderStatus != 'Đã hủy'}"
+                          th:selected="${order.orderStatus == 'Đang giao'} ? 'selected'"
+                          value="Đang giao">Đang giao
+                  </option>
+                  <option th:if="${order.orderStatus != 'Đã hủy'}"
+                          th:selected="${order.orderStatus == 'Đã giao'} ? 'selected'"
+                          value="Đã giao">Đã giao
+                  </option>
+                  <option th:unless="${order.orderStatus != 'Đã hủy'}"
+                          th:selected="${order.orderStatus == 'Đã hủy'} ? 'selected'"
+                          value="Đã hủy">Đã hủy
+                  </option>
+                </select>
+              </div>
+            </td>
+            <td th:text="${order.paymentsMethod}"></td>
+            <td>
+              <a th:href="@{/manager/order/{orderId}(orderId=${order.orderId})}"
+                 class="btn btn-warning d-block " role="button">Chi tiết</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Modal message change order status -->
+      <div id="modal" class="modal fade" tabindex="-1" role="dialog"
+           aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Danh sách đơn hàng</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div id="modal-content" class="modal-body">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-dark mt-4 ml-5"><a class="text-light" href=""><i
+        class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a></button>
+    <!--    PHân trang-->
+    <nav aria-label="Page navigation example" class="mt-5" th:with="size=3"
+         th:if="${currentPage <= totalPage && totalPage > 1}">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" th:if="${currentPage > 1}">
+          <a class="page-link"
+             th:href="@{/manager/orders?page={page}(page=${currentPage - 1})}"
+             aria-label="Previous">
+            <span aria-hidden="true" class="text-dark">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+        <li class="page-item" th:if="${totalPage > size && currentPage > ((size % 2) + 1)}">
+          <p class="page-link" aria-label="Previous">
+            <span aria-hidden="true" class="text-dark">...</span>
+          </p>
+        </li>
+
+        <li class="page-item" th:if="${totalPage > size && currentPage < ((size % 2) + 1)}"
+            th:each="i: ${#numbers.sequence(1, size)}">
+          <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+             th:href="@{/manager/orders?page={page}(page=${i})}" th:text="${i}"></a>
+        </li>
+        <li class="page-item"
+            th:if="${totalPage > size && currentPage >= ((size % 2) + 1) && currentPage <= (totalPage - (size % 2))}"
+            th:each="i: ${#numbers.sequence(currentPage - (size % 2), currentPage + (size % 2))}">
+          <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+             th:href="@{/manager/orders?page={page}(page=${i})}" th:text="${i}"></a>
+        </li>
+        <li class="page-item"
+            th:if="${totalPage > size && currentPage > (totalPage - (size % 2))}"
+            th:each="i: ${#numbers.sequence((totalPage - size + 1), totalPage)}">
+          <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+             th:href="@{/manager/orders?page={page}(page=${i})}" th:text="${i}"></a>
+        </li>
+        <li class="page-item" th:if="${totalPage <= size}"
+            th:each="i: ${#numbers.sequence(1, totalPage)}">
+          <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+             th:href="@{/manager/orders?page={page}(page=${i})}" th:text="${i}"></a>
+        </li>
+
+        <li class="page-item"
+            th:if="${totalPage > size && currentPage < (totalPage - (size % 2))}">
+          <p class="page-link" aria-label="Previous">
+            <span aria-hidden="true" class="text-dark">...</span>
+          </p>
+        </li>
+        <li class="page-item" th:if="${currentPage < totalPage}">
+          <a class="page-link"
+             th:href="@{/manager/orders?page={page}(page=${currentPage + 1})}"
+             aria-label="Next">
+            <span aria-hidden="true" class="text-dark">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${customer.customerName}"></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Admin/CSS/style2.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <script src="https://kit.fontawesome.com/b86b756e64.js" crossorigin="anonymous"></script>
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Admin/JS/script.js}"></script>
+</head>
+<body>
+<div class="page-wrapper chiller-theme toggled">
+  <div th:replace="Admin/SidebarAdmin :: sidebar"></div>
+  <main class="page-content">
+    <div class="container">
+      <h4 class="text-uppercase text-danger font-weight-bold text-center" th:text="'Thông tin tài khoản: #' + ${customer.customerId}"></h4>
+      <hr/>
+      <div>
+        <div class="form-group">
+          <label for="customerId" class="font-weight-bold">Mã khách hàng <span
+              class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" id="customerId" name="name" placeholder="Mã khách hàng"
+                 th:value="${customer.customerId}" readonly/>
+        </div>
+        <div class="form-group">
+          <label for="customerName" class="font-weight-bold">Tên khách hàng <span
+              class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" id="customerName" name="name" placeholder="Tên khách hàng"
+                 th:value="${customer.customerName}" readonly/>
+        </div>
+        <div class="form-group">
+          <label for="phoneNumber" class="font-weight-bold">Số điện thoại<span
+              class="text-danger">*</span>
+          </label>
+          <input type="tel" class="form-control" id="phoneNumber" name="numberPhone"
+                 placeholder="Số điện thoại" th:value="${customer.numberPhone}" readonly/>
+        </div>
+        <div class="form-group">
+          <label for="address" class="font-weight-bold">Địa chỉ<span
+              class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" id="address"
+                 placeholder="Địa chỉ" th:value="${customer.address}" readonly/>
+        </div>
+        <div class="form-group">
+          <label for="email" class="font-weight-bold">Email <span class="text-danger">*</span>
+          </label>
+          <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                 name="email" placeholder="Email" th:value="${customer.email}" required
+                 readonly/>
+        </div>
+        <a class="btn btn-dark my-4" th:href="@{/manager/customers}" role="button"><i
+            class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </main>
+  <!-- page-content" -->
+</div>
+</body>
+</html>

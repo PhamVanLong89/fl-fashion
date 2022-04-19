@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>Doanh thu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Admin/CSS/style2.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <script src="https://kit.fontawesome.com/b86b756e64.js" crossorigin="anonymous"></script>
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Admin/JS/script.js}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+</head>
+<body>
+
+<div class="page-wrapper chiller-theme toggled">
+  <div th:replace="Admin/SidebarAdmin :: sidebar"></div>
+  <main class="page-content">
+    <div class="container-fluid">
+      <h4 class="text-uppercase text-danger font-weight-bold text-center" th:text="'Doanh thu: ' + ${date}"></h4>
+      <hr/>
+
+      <a th:if="${key == null}" th:href="@{/manager}" class="btn btn-dark" role="button"><i
+          class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a>
+      <a th:unless="${key == null}" th:href="@{/manager/admins}" class="btn btn-dark"
+         role="button"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a>
+      <form th:action="@{/manager/admin/search}" method="get"
+            class="input-group col-lg-4 p-0 pl-md-3 float-right" enctype="multipart/form-data">
+        <input type="text" class="form-control" name="key" placeholder="Tìm kiếm..."
+               th:value="${key}"/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+      <p th:if="${key != null}" class="text-uppercase font-weight-bold mt-5"
+         th:text="'Kết quả tìm kiếm cho: ' + ${key}"></p>
+      <br>
+      <div class="mt-5">
+        <label>Chọn tháng cần thống kê doanh thu: </label>
+        <input type="month" id="dateTimeRevenue" th:value="${date}">
+        <button type="button" class="btn btn-secondary" th:onclick="revenueStatistics()">Thống kê</button>
+      </div>
+      <canvas id="myChart" class="w-100 mt-5"></canvas>
+      <p class="d-flex justify-content-center mt-3" th:text="'Biểu đồ doanh thu: ' + ${date}"></p>
+      <div class="table">
+        <table class="table mt-4" id="" name="tableAdmins">
+          <thead>
+          <tr>
+            <th scope="col">Ngày</th>
+            <th scope="col">Doanh thu</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="revenue: ${revenueList}">
+            <td th:text="${revenue.date}"/>
+            <td th:text="${#numbers.formatDecimal(revenue.revenue, 0, 'COMMA', 0, 'POINT')} + ' đ'"/>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <!-- page-content" -->
+  <script th:inline="javascript">
+    loadGraph([[${revenueList}]]);
+
+    var today = new Date();
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm;
+    console.log(today);
+    document.getElementById("dateTimeRevenue").max = today;
+  </script>
+
+</div>
+</body>
+</html>

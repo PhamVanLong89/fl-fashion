@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng nhập</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css"
+        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Customer/CSS/style.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+        crossorigin="anonymous"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Customer/JS/script.js}"></script>
+  <script type="text/javascript"
+          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body>
+<div th:replace="Customer/Header :: header"></div>
+<div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-md-6 text-uppercase text-center my-auto register">
+      Đăng nhập
+    </div>
+    <div class="col-md-6 bg-info p-md-4">
+      <p class="error2" th:if="${param.error}">Email hoặc mật khẩu không chính xác!</p>
+      <form class="m-md-4" th:action="@{/loginUser}" method="post">
+        <div class="form-group">
+          <label for="emailUser" class="font-weight-bold">Email <span
+              class="text-danger">*</span></label>
+          <input type="email" class="form-control" id="emailUser" name="email"
+                 aria-describedby="emailHelp" placeholder="Email"/>
+        </div>
+        <div class="form-group">
+          <label for="password" class="font-weight-bold">Mật khẩu <span class="text-danger">*</span></label>
+          <input type="password" class="form-control" id="password" name="password"
+                 placeholder="Mật khẩu"/>
+        </div>
+        <button type="submit" class="btn btn-dark text-white my-3 mt-md-5">Đăng nhập</button>
+      </form>
+      <p class="d-inline mr-2 ml-md-4">Bạn chưa có tài khoản?</p>
+      <a class="font-weight-bold" th:href="@{/register}">Đăng ký</a>
+      <a class="font-weight-bold d-block ml-md-4 my-3" href="">Quên mật khẩu?</a>
+    </div>
+  </div>
+</div>
+<div th:replace="Customer/Footer :: footer"></div>
+</body>
+</html>

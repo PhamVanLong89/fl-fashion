@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết đơn hàng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css"
+        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Customer/CSS/style.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+        crossorigin="anonymous"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Customer/JS/script.js}"></script>
+  <script type="text/javascript"
+          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body>
+<div th:replace="Customer/Header :: header"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3 my-5">
+      <a class="row my-2" th:href="@{/user/profile}">Thông tin tài khoản</a>
+      <a class="row my-2 link-active" th:href="@{/user/orders}">Danh sách đơn hàng</a>
+      <a class="row my-2" th:href="@{/user/ChangePassword}">Đổi mật khẩu</a>
+      <a class="row my-2" th:href="@{/user/logout}">Đăng xuất</a>
+    </div>
+    <div class="col-md-9">
+      <h3 class="text-uppercase font-weight-bold mt-3 title-cart"
+          style="font-size: 30px !important;" th:text="'Chi tiết đơn hàng: ' + ${order.orderId}">
+      </h3>
+      <hr class="clearfix w-100 "/>
+      <div class="row">
+        <div class="col-md-7 bg-light rounded-5 mb-3">
+          <p class="text-center text-uppercase mt-2 font-weight-bold">Địa chỉ người nhận</p>
+          <div class="row">
+            <p class="ml-3 w-100" th:text="'Họ tên: ' + ${order.customerForm.customerName}"></p>
+            <p class="ml-3 w-100" th:text="'Số điện thoại: ' + ${order.customerForm.numberPhone}"></p>
+            <p class="ml-3 w-100" th:text="'Địa chỉ: ' + ${order.customerForm.address}"></p>
+          </div>
+        </div>
+        <div class="col-md-1 rounded mb-3">
+        </div>
+        <div class="col-md-4 bg-light mb-3">
+          <p class="text-center text-uppercase mt-2 font-weight-bold">Hình thức thanh toán</p>
+          <div class="row" th:switch="${order.paymentsMethod}">
+            <p th:case="'COD'" class="ml-3 w-100">Thanh toán tiền mặt khi nhận hàng - COD</p>
+            <p th:case="'MoMo'" class="ml-3 w-100">Thanh toán bằng ví MoMo</p>
+            <p th:case="'ZaloPay'" class="ml-3 w-100">Thanh toán bằng ZaloPay</p>
+          </div>
+        </div>
+      </div>
+      <div class="table2" style="overflow-x:auto;">
+        <table class="table mt-4  table-striped" id="" name="tableOrderDetail">
+          <thead>
+          <tr>
+            <th scope="col">Hình ảnh</th>
+            <th scope="col">SKU</th>
+            <th scope="col">Tên sản phẩm</th>
+            <th scope="col">Màu sắc</th>
+            <th scope="col">Kích cỡ</th>
+            <th scope="col">Giá bán</th>
+            <th scope="col">Số lượng</th>
+            <th scope="col">Giảm giá</th>
+            <th scope="col">Thành tiền</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="orderDetail: ${order.orderDetailForms}">
+            <td>
+              <a th:if="${orderDetail.variantForm.productForm.image != null}"
+                 th:href="@{/product/{productId}(productId=${orderDetail.variantForm.productForm.productId})}">
+                <img th:src="@{'/img/' + ${orderDetail.variantForm.productForm.image}}"
+                     alt='' class='img-thumbnail img-product'>
+              </a>
+            </td>
+            <td th:text="${orderDetail.variantForm.sKU}"></td>
+            <td><p class='font-weight-bold text-uppercase'>
+              <a th:href="@{/product/{productId}/{productName}(productName=${orderDetail.variantForm.productForm.productName}, productId=${orderDetail.variantForm.productForm.productId})}"
+                 th:text="${orderDetail.variantForm.productForm.productName}"></a>
+            </p></td>
+            <td>
+              <input type="color" th:value="${orderDetail.variantForm.color}" disabled>
+            </td>
+            <td th:text="${orderDetail.variantForm.size}"></td>
+            <td th:text="${#numbers.formatDecimal(orderDetail.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+            <td th:text="${orderDetail.quantity}"></td>
+            <td th:text="${orderDetail.sale} + '%'"></td>
+            <td th:text="${#numbers.formatDecimal(orderDetail.amount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-md-5 mb-3">
+        </div>
+        <div class="col-md-7 bg-light rounded-5 mb-3">
+          <div class='row mt-4'>
+            <div class='col-6'>
+              <p class='text-left'>Tổng tiền:</p>
+            </div>
+            <div class='col-5'>
+              <p class="text-right"
+                 th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:replace="Customer/Footer :: footer"></div>
+</body>
+</html>

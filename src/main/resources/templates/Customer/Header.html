@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="header">
+  <div class="container-fluid sticky-top p-0">
+    <div class="container-fluid bg-dark p-0 m-0" style="height: 24px;">
+      <div class="col-12">
+        <div class="mx-3 float-right">
+          <a class="text-white" th:href="@{/cart}"><i
+              class="far fa-shopping-bag text-white"></i>Giỏ hàng
+            <span id="totalProductInCart"></span></a>
+        </div>
+        <div class="mx-3 float-right dropdown"
+             sec:authorize="isAnonymous() || hasRole('ROLE_ADMIN')">
+          <a class="text-white dropdown-toggle" href=""
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+              class="far fa-user text-white"></i> Tài khoản</a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class='dropdown-item' th:href='@{/login}'>Đăng nhập</a>
+            <a class='dropdown-item' th:href='@{/register}'>Đăng ký</a>
+          </div>
+        </div>
+        <div class="mx-3 float-right dropdown" sec:authorize="hasRole('ROLE_USER')">
+          <a class="text-white dropdown-toggle" href=""
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+              class="far fa-user text-white"></i>
+            [[${#request.userPrincipal.principal.customerName}]]</a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class='dropdown-item' th:href="@{/user/profile}">Tài khoản của tôi</a>
+            <a class='dropdown-item' th:href="@{/user/orders}">Danh sách đơn hàng</a>
+            <a class='dropdown-item' th:href="@{/user/logout}">Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- menu -->
+    <nav class="container-fluid navbar navbar-expand-lg navbar-light bg-light header">
+      <div class="container col-lg-8">
+        <a class="navbar-brand" th:href="@{/}"><img style="width: 80px;" th:src="@{/img/logo.jpg}"
+                                                    alt="PhamLong"/></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown px-3">
+              <a class="nav-link" th:href="@{/products/category/nu}">
+                NỮ
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item"
+                   th:href="@{/products/category/ao nu}">Áo</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/quan nu}">Quần</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/vay nu}">Váy</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/phu kien nu}">Phụ
+                  kiện</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown px-3">
+              <a class="nav-link" th:href="@{/products/category/nam}">
+                NAM
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item"
+                   th:href="@{/products/category/ao nam}">Áo</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/quan nam}">Quần</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/phu kien nam}">Phụ
+                  kiện</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown px-3">
+              <a class="nav-link" th:href="@{/products/category/be gai}">
+                BÉ GÁI
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item"
+                   th:href="@{/products/category/ao be gai}">Áo</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/quan be gai}">Quần</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/vay be gai}">Váy</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/phu kien be gai}">Phụ
+                  kiện</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown px-3">
+              <a class="nav-link" th:href="@{/products/category/be trai}">
+                BÉ TRAI
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item"
+                   th:href="@{/products/category/ao be trai}">Áo</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/quan be trai}">Quần</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/category/phu kien be trai}">Phụ
+                  kiện</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown px-3">
+              <p class="nav-link link-active m-0">
+                MỚI
+              </p>
+              <div class="dropdown-menu">
+                <a class="dropdown-item"
+                   th:href="@{/products/new/nu}">NỮ</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/new/nam}">NAM</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/new/be gai}">BÉ GÁI</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/new/be trai}">BÉ TRAI</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown px-3">
+              <p class="nav-link link-active m-0" id="navbarDropdown">
+                GIẢM GIÁ
+              </p>
+              <div class="dropdown-menu">
+                <a class="dropdown-item"
+                   th:href="@{/products/sale/nu}">NỮ</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/sale/nam}">NAM</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/sale/be gai}">BÉ GÁI</a>
+                <a class="dropdown-item"
+                   th:href="@{/products/sale/be trai}">BÉ TRAI</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <form th:action="@{/products/search}" method="get"
+            class="input-group col-lg-4 p-0 pl-md-3" enctype="multipart/form-data">
+        <input type="text" class="form-control" name="key" placeholder="Tìm kiếm..."
+               th:value="${key}"/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+    </nav>
+  </div>
+  <!-- end menu -->
+  <!-- slide top -->
+  <div id="carouselExampleSlidesOnly" class="carousel slide m-0 bg-dark" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <p class="text-center text-light bg-dark m-0" style="font-size: 2vw !important;">Thêm vào
+          giỏ
+          hàng 499.000đ để được miễn phí vận chuyển</p>
+      </div>
+      <div class="carousel-item">
+        <p class="text-center text-light bg-dark m-0" style="font-size: 2vw !important;">ĐỔI HÀNG
+          MIỄN
+          PHÍ - Tại tất cả các cửa hàng trong 15 ngày</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

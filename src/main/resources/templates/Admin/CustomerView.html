@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách tài khoản khách hàng</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Admin/CSS/style2.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <script src="https://kit.fontawesome.com/b86b756e64.js" crossorigin="anonymous"></script>
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Admin/JS/script.js}"></script>
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
+        rel="stylesheet">
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+</head>
+<body>
+<div class="page-wrapper chiller-theme toggled">
+  <div th:replace="Admin/SidebarAdmin :: sidebar"></div>
+  <main class="page-content">
+    <div class="container-fluid">
+      <h4 class="text-uppercase text-danger font-weight-bold text-center">Danh sách khách hàng</h4>
+      <hr/>
+      <a th:if="${key == null}" th:href="@{/manager}" class="btn btn-dark" role="button"><i
+          class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a>
+      <a th:unless="${key == null}" th:href="@{/manager/customers}" class="btn btn-dark"
+         role="button"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a>
+      <form th:action="@{/manager/customer/search}" method="get"
+            class="input-group col-lg-4 p-0 pl-md-3 float-right" enctype="multipart/form-data">
+        <input type="text" class="form-control" name="key" placeholder="Tìm kiếm..."
+               th:value="${key}"/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+      <p th:if="${key != null}" class="text-uppercase font-weight-bold mt-5"
+         th:text="'Kết quả tìm kiếm cho: ' + ${key}"></p>
+      <div class="table" style="overflow-x:auto;">
+        <table class="table mt-4" id="" name="tableProductVariant">
+          <thead>
+          <tr>
+            <th scope="col">Mã khách hàng</th>
+            <th scope="col">Họ tên</th>
+            <th scope="col">Số điện thoại</th>
+            <th scope="col">Địa chỉ</th>
+            <th scope="col">Email</th>
+            <th scope="col">Hoạt động</th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="customer: ${customers}">
+            <td th:text="${customer.customerId}"/>
+            <td th:text="${customer.customerName}"/>
+            <td th:text="${customer.numberPhone}"/>
+            <td th:text="${customer.address}"/>
+            <td th:text="${customer.email}"/>
+            <td>
+              <input type="checkbox" data-onstyle="success" data-offstyle="danger"
+                     th:onchange="'changeStatus(this, ' + ${customer.customerId} + ')'"
+                     th:checked="${customer.statusActive}" data-toggle="toggle"
+                     data-on="<i class='fa fa-unlock' aria-hidden='true'></i> Mở"
+                     data-off="<i class='fa fa-lock' aria-hidden='true'></i> Khóa" data-size="mini">
+            </td>
+            <td><a class="btn btn-warning" href=""
+                   th:href="@{/manager/customer/{customerId}(customerId=${customer.customerId})}"
+                   role="button">Chi tiết</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="modalChangeStatusCustomer" class="modal fade" tabindex="-1"
+           role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Tài khoản</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div id="modal-content" class="modal-body">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

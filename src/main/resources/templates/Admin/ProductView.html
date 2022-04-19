@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách sản phẩm</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/Admin/CSS/style2.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <script src="https://kit.fontawesome.com/b86b756e64.js" crossorigin="anonymous"></script>
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Admin/JS/script.js}"></script>
+</head>
+<body>
+<div class="page-wrapper chiller-theme toggled">
+  <div th:replace="Admin/SidebarAdmin :: sidebar"></div>
+  <main class="page-content">
+    <div class="container-fluid">
+      <h4 class="text-uppercase text-danger font-weight-bold text-center">Danh sách
+        sản phẩm</h4>
+      <hr/>
+      <form th:action="@{/manager/products/search}" method="get"
+            class="input-group col-lg-4 p-0 pl-md-3 float-right" enctype="multipart/form-data">
+        <input type="text" class="form-control" name="key" placeholder="Tìm kiếm..."
+               th:value="${key}" required/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+      <a th:if="${key == null}" th:href="@{/manager}" class="btn btn-dark  mt-5 mt-lg-0"
+         role="button">
+        <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a>
+      <a th:unless="${key == null}" th:href="@{/manager/products}"
+         class="btn btn-dark  mt-5 mt-lg-0"
+         role="button"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a>
+      <p th:if="${key != null}" class="text-uppercase font-weight-bold mt-5"
+         th:text="'Kết quả tìm kiếm cho: ' + ${key}"></p>
+
+      <button class="btn btn-secondary d-lg-block d-inline mt-5" type="button"
+              data-toggle="collapse" data-target="#filterProduct" aria-expanded="false"
+              aria-controls="collapseExample">
+        <i class="fa fa-filter" aria-hidden="true"></i> Lọc sản phẩm
+      </button>
+      <div class="collapse mt-3" id="filterProduct">
+        <div class="card card-body ">
+          <div class="row">
+            <div th:class="${key == null} ? 'col-md-7' : 'd-none'">
+              <p class="w-100 m bg-light text-uppercase py-2 pl-xl-5">Danh mục sản phẩm</p>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-check ml-xl-4">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'nu'}"
+                           id="filterCategory1" value="nu"
+                           th:onclick="${param.category != null && param.category[0] == 'nu'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory1">Nữ</a></label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'ao nu'}"
+                           id="filterCategory2" value="ao nu"
+                           th:onclick="${param.category != null && param.category[0] == 'ao nu'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory2">Áo nữ</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'quan nu'}"
+                           id="filterCategory3" value="quan nu"
+                           th:onclick="${param.category != null && param.category[0] == 'quan nu'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory3">Quần nữ</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'vay nu'}"
+                           id="filterCategory4" value="vay nu"
+                           th:onclick="${param.category != null && param.category[0] == 'vay nu'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory4">Váy nữ</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'phu kien nu'}"
+                           id="filterCategory5" value="phu kien nu"
+                           th:onclick="${param.category != null && param.category[0] == 'phu kien nu'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory5">Phụ kiện nữ</label>
+                  </div>
+                  <div class="form-check ml-xl-4">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'nam'}"
+                           id="filterCategory6" value="nam"
+                           th:onclick="${param.category != null && param.category[0] == 'nam'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory6">Nam</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'ao nam'}"
+                           id="filterCategory7" value="ao nam"
+                           th:onclick="${param.category != null && param.category[0] == 'ao nam'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory7">Áo nam</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'quan nam'}"
+                           id="filterCategory8" value="quan nam"
+                           th:onclick="${param.category != null && param.category[0] == 'quan nam'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory8">Quần nam</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'phu kien nam'}"
+                           id="filterCategory9" value="phu kien nam"
+                           th:onclick="${param.category != null && param.category[0] == 'phu kien nam'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory9">Phụ kiện nam</label>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-check ml-xl-4">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'be gai'}"
+                           id="filterCategory10" value="be gai"
+                           th:onclick="${param.category != null && param.category[0] == 'be gai'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory10">Bé gái</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'ao be gai'}"
+                           id="filterCategory11" value="ao be gai"
+                           th:onclick="${param.category != null && param.category[0] == 'ao be gai'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory11">Áo bé gái</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'quan be gai'}"
+                           id="filterCategory12" value="quan be gai"
+                           th:onclick="${param.category != null && param.category[0] == 'quan be gai'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory12">Quần bé gái</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'vay be gai'}"
+                           id="filterCategory13" value="vay be gai"
+                           th:onclick="${param.category != null && param.category[0] == 'vay be gai'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory13">Váy bé gái</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'phu kien be gai'}"
+                           id="filterCategory14" value="phu kien be gai"
+                           th:onclick="${param.category != null && param.category[0] == 'phu kien be gai'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory14">Phụ kiện bé gái</label>
+                  </div>
+                  <div class="form-check ml-xl-4">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'be trai'}"
+                           id="filterCategory15" value="be trai"
+                           th:onclick="${param.category != null && param.category[0] == 'be trai'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory15">Bé trai</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'ao be trai'}"
+                           id="filterCategory16" value="ao be trai"
+                           th:onclick="${param.category != null && param.category[0] == 'ao be trai'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory16">Áo bé trai</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           th:checked="${param.category != null && param.category[0] == 'quan be trai'}"
+                           id="filterCategory17" value="quan be trai"
+                           th:onclick="${param.category != null && param.category[0] == 'quan be trai'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory17">Quần bé trai</label>
+                  </div>
+                  <div class="form-check ml-xl-5 ml-md-3">
+                    <input class="form-check-input" type="radio" name="filterCategory"
+                           id="filterCategory18" value="phu kien be trai"
+                           th:checked="${param.category != null && param.category[0] == 'phu kien be trai'}"
+                           th:onclick="${param.category != null && param.category[0] == 'phu kien be trai'} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                    <label class="form-check-label" for="filterCategory18">Phụ kiện bé trai</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-5">
+              <p class="w-100 m bg-light text-uppercase py-2 pl-xl-5">Đơn giá</p>
+              <div class="form-check ml-xl-5">
+                <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice1"
+                       th:checked="${(param.maxPrice != null && param.maxPrice[0] == '200000') && (param.minPrice == null || param.minPrice[0] == '0')}"
+                       value="0-200000"
+                       th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '200000') && (param.minPrice == null || param.minPrice[0] == '0')} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                <label class="form-check-label" for="filterPrice1">0đ - 200.000đ</a></label>
+              </div>
+              <div class="form-check ml-xl-5">
+                <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice2"
+                       th:checked="${(param.maxPrice != null && param.maxPrice[0] == '400000') && (param.minPrice != null && param.minPrice[0] == '200000')}"
+                       value="200000-400000"
+                       th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '400000') && (param.minPrice != null && param.minPrice[0] == '200000')} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                <label class="form-check-label" for="filterPrice2">200.000đ - 400.000đ</label>
+              </div>
+              <div class="form-check ml-xl-5">
+                <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice3"
+                       th:checked="${(param.maxPrice != null && param.maxPrice[0] == '600000') && (param.minPrice != null && param.minPrice[0] == '400000')}"
+                       value="400000-600000"
+                       th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '600000') && (param.minPrice != null && param.minPrice[0] == '400000')} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                <label class="form-check-label" for="filterPrice3">400.000đ - 600.000đ</label>
+              </div>
+              <div class="form-check ml-xl-5">
+                <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice4"
+                       th:checked="${(param.maxPrice != null && param.maxPrice[0] == '800000') && (param.minPrice != null && param.minPrice[0] == '600000')}"
+                       value="600000-800000"
+                       th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '800000') && (param.minPrice != null && param.minPrice[0] == '600000')} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                <label class="form-check-label" for="filterPrice4">600.000đ - 800.000đ</label>
+              </div>
+              <div class="form-check ml-xl-5">
+                <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice5"
+                       th:checked="${(param.maxPrice != null && param.maxPrice[0] == '1200000') && (param.minPrice != null && param.minPrice[0] == '800000')}"
+                       value="800000-1200000"
+                       th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '1200000') && (param.minPrice != null && param.minPrice[0] == '800000')} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                <label class="form-check-label" for="filterPrice5">800.000đ - 1.200.000đ</label>
+              </div>
+              <div class="form-check ml-xl-5">
+                <input class="form-check-input" type="radio" name="filterPrice" id="filterPrice6"
+                       th:checked="${(param.maxPrice != null && param.maxPrice[0] == '1800000') && (param.minPrice != null && param.minPrice[0] == '1200000')}"
+                       value="1200000-1800000"
+                       th:onclick="${(param.maxPrice != null && param.maxPrice[0] == '1800000') && (param.minPrice != null && param.minPrice[0] == '1200000')} ? 'uncheck($(this)); requestProductFilter()' : 'requestProductFilter()'">
+                <label class="form-check-label" for="filterPrice6">1.200.000đ - 1.800.000đ</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div th:if="${#lists.isEmpty(products)}" class="w-100 mt-5 font-weight-bold text-center">
+        Rất tiếc, không tìm thấy sản phẩm phù hợp với lựa chọn của bạn.
+      </div>
+      <div th:unless="${#lists.isEmpty(products)}" class=" table" style="overflow-x:auto;">
+        <table class="table mt-4 table-sortable" id="tableProduct" name="tableProduct">
+          <thead>
+          <tr>
+<!--            <th th:unless="${key == null}" scope="col">Mã SP</th>-->
+            <th scope="col">
+              <a th:if="${param.sort != null && param.sort[0] == 'productId' && param.type != null && param.type[0] == 'ASC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productId').replaceQueryParam('type', 'DESC').toUriString())}"
+                 class="text-dark th-sort-asc">Mã SP</a>
+              <a th:if="${param.sort != null && param.sort[0] == 'productId' && param.type != null && param.type[0] == 'DESC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productId').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark th-sort-desc">Mã SP</a>
+              <a th:if="${param.sort == null || param.sort[0] != 'productId' || param.type == null || (param.type[0] != 'ASC' && param.type[0] != 'DESC')}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productId').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark">Mã SP</a>
+            </th>
+<!--            <th th:unless="${key == null}" scope="col">Tên SP</th>-->
+            <th scope="col">
+              <a th:if="${param.sort != null && param.sort[0] == 'productName' && param.type != null && param.type[0] == 'ASC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productName').replaceQueryParam('type', 'DESC').toUriString())}"
+                 class="text-dark th-sort-asc">Tên sản phẩm</a>
+              <a th:if="${param.sort != null && param.sort[0] == 'productName' && param.type != null && param.type[0] == 'DESC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productName').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark th-sort-desc">Tên sản phẩm</a>
+              <a th:if="${param.sort == null || param.sort[0] != 'productName' || param.type == null || (param.type[0] != 'ASC' && param.type[0] != 'DESC')}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productName').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark">Tên sản phẩm</a>
+            </th>
+<!--            <th th:unless="${key == null}" scope="col">Loại sản phẩm</th>-->
+            <th scope="col">
+              <a th:if="${param.sort != null && param.sort[0] == 'categoryName' && param.type != null && param.type[0] == 'ASC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'categoryName').replaceQueryParam('type', 'DESC').toUriString())}"
+                 class="text-dark th-sort-asc">Loại sản phẩm</a>
+              <a th:if="${param.sort != null && param.sort[0] == 'categoryName' && param.type != null && param.type[0] == 'DESC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'categoryName').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark th-sort-desc">Loại sản phẩm</a>
+              <a th:if="${param.sort == null || param.sort[0] != 'categoryName' || param.type == null || (param.type[0] != 'ASC' && param.type[0] != 'DESC')}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'categoryName').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark">Loại sản phẩm</a>
+            </th>
+<!--            <th th:unless="${key == null}" scope="col">Giá bán</th>-->
+            <th scope="col">
+              <a th:if="${param.sort != null && param.sort[0] == 'productPrice' && param.type != null && param.type[0] == 'ASC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productPrice').replaceQueryParam('type', 'DESC').toUriString())}"
+                 class="text-dark th-sort-asc">Giá bán</a>
+              <a th:if="${param.sort != null && param.sort[0] == 'productPrice' && param.type != null && param.type[0] == 'DESC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productPrice').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark th-sort-desc">Giá bán</a>
+              <a th:if="${param.sort == null || param.sort[0] != 'productPrice' || param.type == null || (param.type[0] != 'ASC' && param.type[0] != 'DESC')}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productPrice').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark">Giá bán</a>
+            </th>
+<!--            <th th:unless="${key == null}" scope="col">Giảm giá</th>-->
+            <th scope="col">
+              <a th:if="${param.sort != null && param.sort[0] == 'productSale' && param.type != null && param.type[0] == 'ASC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productSale').replaceQueryParam('type', 'DESC').toUriString())}"
+                 class="text-dark th-sort-asc">Giảm giá</a>
+              <a th:if="${param.sort != null && param.sort[0] == 'productSale' && param.type != null && param.type[0] == 'DESC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productSale').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark th-sort-desc">Giảm giá</a>
+              <a th:if="${param.sort == null || param.sort[0] != 'productSale' || param.type == null || (param.type[0] != 'ASC' && param.type[0] != 'DESC')}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'productSale').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark">Giảm giá</a>
+            </th>
+<!--            <th th:unless="${key == null}" scope="col">Ngày bán</th>-->
+            <th scope="col">
+              <a th:if="${param.sort != null && param.sort[0] == 'saleDate' && param.type != null && param.type[0] == 'ASC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'saleDate').replaceQueryParam('type', 'DESC').toUriString())}"
+                 class="text-dark th-sort-asc">Ngày bán</a>
+              <a th:if="${param.sort != null && param.sort[0] == 'saleDate' && param.type != null && param.type[0] == 'DESC'}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'saleDate').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark th-sort-desc">Ngày bán</a>
+              <a th:if="${param.sort == null || param.sort[0] != 'saleDate' || param.type == null || (param.type[0] != 'ASC' && param.type[0] != 'DESC')}"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('sort', 'saleDate').replaceQueryParam('type', 'ASC').toUriString())}"
+                 class="text-dark">Ngày bán</a>
+            </th>
+            <th scope="col">Hiển thị lên trang chủ</th>
+            <th scope="col">Hình ảnh</th>
+            <th scope="col">Admin thêm</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="product: ${products}">
+            <td th:text="${product.productId}"></td>
+            <td th:text="${product.productName}"></td>
+            <td th:text="${product.categoryName}"></td>
+            <td th:text="${#numbers.formatDecimal(product.productPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+            <td th:text="${product.productSale} + '%'"></td>
+            <td th:text="${product.saleDate}"></td>
+            <td th:if="${product.displayHome == '1'}" th:text="Có"></td>
+            <td th:unless="${product.displayHome == '1'}" th:text="Không"></td>
+            <td><img th:if="${product.image != null}" th:src="@{'/img/' + ${product.image}}"
+                     alt='' class='img-thumbnail img-product'></td>
+            <td th:text="${product.adminId}"></td>
+            <td><a th:href="@{/manager/product/{productId}(productId=${product.productId})}"
+                   class="btn btn-warning d-block" role="button">Sửa</a></td>
+            <td>
+              <button type="button" class="btn btn-warning" data-toggle="modal"
+                      th:data-target="'#modalDeleteProduct' + ${product.productId}">Xóa
+              </button>
+              <!-- Modal delete product-->
+              <div class="modal fade" tabindex="-1"
+                   th:id="'modalDeleteProduct' + ${product.productId}"
+                   role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Sản phẩm</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">Bạn có muốn xóa sản phẩm: <span
+                        class="text-danger" th:text="${product.productName}"></span>
+                      không??
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy
+                      </button>
+                      <button type="button" class="btn btn-primary"
+                              th:onclick="deleteProduct([[${product.productId}]])">Có
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <!-- Modal message delete product -->
+        <div id="modalMessageDeleteProduct" class="modal fade" tabindex="-1"
+             role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div id="modal-content-message" class="modal-body">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Phân trang-->
+        <nav aria-label="Page navigation example" class="mt-5" th:with="size=3"
+             th:if="${currentPage <= totalPage && totalPage > 1}">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" th:if="${currentPage > 1}">
+              <a class="page-link"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page',currentPage - 1).toUriString())}"
+                 aria-label="Previous">
+                <span aria-hidden="true" class="text-dark">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item" th:if="${totalPage > size && currentPage > ((size % 2) + 1)}">
+              <p class="page-link" aria-label="Previous">
+                <span aria-hidden="true" class="text-dark">...</span>
+              </p>
+            </li>
+
+            <li class="page-item" th:if="${totalPage > size && currentPage < ((size % 2) + 1)}"
+                th:each="i: ${#numbers.sequence(1, size)}">
+              <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page',i).toUriString())}"
+                 th:text="${i}"></a>
+            </li>
+            <li class="page-item"
+                th:if="${totalPage > size && currentPage >= ((size % 2) + 1) && currentPage <= (totalPage - (size % 2))}"
+                th:each="i: ${#numbers.sequence(currentPage - (size % 2), currentPage + (size % 2))}">
+              <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page',i).toUriString())}"
+                 th:text="${i}"></a>
+            </li>
+            <li class="page-item"
+                th:if="${totalPage > size && currentPage > (totalPage - (size % 2))}"
+                th:each="i: ${#numbers.sequence((totalPage - size + 1), totalPage)}">
+              <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page',i).toUriString())}"
+                 th:text="${i}"></a>
+            </li>
+            <li class="page-item" th:if="${totalPage <= size}"
+                th:each="i: ${#numbers.sequence(1, totalPage)}">
+              <a th:class="${i == currentPage} ? 'page-link text-danger': 'page-link text-dark'"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page',i).toUriString())}"
+                 th:text="${i}"></a>
+            </li>
+
+            <li class="page-item"
+                th:if="${totalPage > size && currentPage < (totalPage - (size % 2))}">
+              <p class="page-link" aria-label="Previous">
+                <span aria-hidden="true" class="text-dark">...</span>
+              </p>
+            </li>
+            <li class="page-item" th:if="${currentPage < totalPage}">
+              <a class="page-link"
+                 th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+                 th:href="${#uris.unescapePath(urlBuilder.replaceQueryParam('page', currentPage + 1).toUriString())}"
+                 aria-label="Next">
+                <span aria-hidden="true" class="text-dark">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

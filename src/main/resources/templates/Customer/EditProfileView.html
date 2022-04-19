@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Thông tin cá nhân</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css"
+        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Customer/CSS/style.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+        crossorigin="anonymous"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Customer/JS/script.js}"></script>
+  <script type="text/javascript"
+          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body>
+<div th:replace="Customer/Header :: header"></div>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-3 my-5 ">
+      <a class="row my-2 link-active" th:href="@{/user/profile}">Thông tin tài khoản</a>
+      <a class="row my-2" th:href="@{/user/orders}">Danh sách đơn hàng</a>
+      <a class="row my-2" th:href="@{/user/ChangePassword}">Đổi mật khẩu</a>
+      <a class="row my-2" th:href="@{/user/logout}">Đăng xuất</a>
+    </div>
+    <div class="col-md-9">
+      <h4 class="text-uppercase font-weight-bold title-cart">Sửa thông tin</h4>
+      <hr/>
+      <div th:if="${message != null}">
+        <div class="modal" tabindex="-1" role="dialog" id="modalCustomer">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Tài khoản</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p th:text="${message}"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <form th:action="@{/user/profile}" th:object="${customer}" method="POST">
+        <div class="form-group">
+          <label for="nameUser" class="font-weight-bold">Họ tên<span class="text-danger">*</span>
+            <p class="error" th:if="${#fields.hasErrors('customerName')}"
+               th:errors="*{customerName}"></p>
+          </label>
+          <input type="text" class="form-control" id="nameUser" name="customerName"
+                 placeholder="Họ tên" th:field="*{customerName}"/>
+        </div>
+        <div class="form-group">
+          <label for="phoneUser" class="font-weight-bold">Số điện thoại<span
+              class="text-danger">*</span>
+            <p class="error" th:if="${#fields.hasErrors('numberPhone')}"
+               th:errors="*{numberPhone}"></p>
+          </label>
+          <input type="tel" class="form-control" id="phoneUser" name="numberPhone"
+                 placeholder="0987654321" th:field="*{numberPhone}"/>
+        </div>
+        <div class="form-group">
+          <label for="addressUser" class="font-weight-bold">Địa chỉ<span
+              class="text-danger">*</span>
+            <p class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+          </label>
+          <input type="text" class="form-control" id="addressUser" name="address"
+                 placeholder="Địa chỉ" th:field="*{address}"/>
+        </div>
+        <div class="form-group">
+          <label for="emailAdmin" class="font-weight-bold">Email <span class="text-danger">*</span>
+          </label>
+          <input type="email" class="form-control" id="emailAdmin" aria-describedby="emailHelp"
+                 name="email" placeholder="Email user" required readonly th:field="*{email}"/>
+        </div>
+        <button type="submit" class="btn btn-info mt-4">Sửa thông tin</button>
+      </form>
+    </div>
+  </div>
+</div>
+<div th:replace="Customer/Footer :: footer"></div>
+</body>
+</html>

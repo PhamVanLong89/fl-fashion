@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title th:text="${admin.adminName}"></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/Admin/CSS/style2.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.css}"/>
+  <script src="https://kit.fontawesome.com/b86b756e64.js" crossorigin="anonymous"></script>
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"/>
+  <script type="text/javascript" th:src="@{/JS/jquery-3.3.1.min.js}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" th:src="@{/JS/popper.min.js}"></script>
+  <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+  <script type="text/javascript" th:src="@{/Admin/JS/script.js}"></script>
+</head>
+<body>
+<div class="page-wrapper chiller-theme toggled">
+  <div th:replace="Admin/SidebarAdmin :: sidebar"></div>
+  <main class="page-content">
+    <div class="container">
+      <h4 class="text-uppercase text-danger font-weight-bold text-center">Thông tin tài khoản
+        admin</h4>
+      <hr/>
+      <div>
+        <div class="form-group">
+          <label for="adminName" class="font-weight-bold">Tên admin <span
+              class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" id="adminName" name="name" placeholder="Tên admin"
+                 th:value="${admin.adminName}" readonly/>
+        </div>
+        <div class="form-group">
+          <label for="phoneNumberAdmin" class="font-weight-bold">Số điện thoại<span
+              class="text-danger">*</span>
+          </label>
+          <input type="tel" class="form-control" id="phoneNumberAdmin" name="numberPhone"
+                 placeholder="Số điện thoại" th:value="${admin.numberPhone}" readonly/>
+        </div>
+        <div class="form-group">
+          <label for="sexAdmin" class="font-weight-bold">Giới tính<span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" id="sexAdmin" name="sexAdmin" placeholder=""
+                 th:value="${admin.sex}" readonly/>
+        </div>
+        <div class="form-group">
+          <label for="addressAdmin" class="font-weight-bold">Địa chỉ<span
+              class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" id="addressAdmin"
+                 placeholder="Địa chỉ" th:value="${admin.address}" readonly/>
+        </div>
+        <div class="form-group">
+          <label for="emailAdmin" class="font-weight-bold">Email <span class="text-danger">*</span>
+          </label>
+          <input type="email" class="form-control" id="emailAdmin" aria-describedby="emailHelp"
+                 name="email" placeholder="Email admin" th:value="${admin.email}" required
+                 readonly/>
+        </div>
+        <div class="form-group">
+          <label  class="font-weight-bold">Hình ảnh
+          </label>
+          <img id="avatarAdmin"  th:if="${admin.image != null}" th:src="@{'/img/' + ${admin.image}}"
+               alt='' class='img-thumbnail avatar form-control'>
+          <img  th:unless="${admin.image != null}" th:src="@{/img/no_avatar.png}"
+               alt='' class='img-thumbnail avatar form-control'>
+        </div>
+        <a class="btn btn-dark my-4" th:href="@{/manager/admins}" role="button"><i
+            class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </main>
+  <!-- page-content" -->
+</div>
+</body>
+</html>
